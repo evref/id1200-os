@@ -1,21 +1,31 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
-#include <sys/types.h>
+#include <fcntl.h>
+
 
 int main() {
-    int status;
-    int pid = fork();
+    int pipefd[2];
 
-    if(pid == 0) {
-        printf("Hello from child!\n");
-    } else if(pid < 0) {
-        perror("fork");
-        exit(1);
-    } else {
-        wait(&status);
-        printf("Hello from parent at %i\n", pid);
+    pipe(pipefd);
+
+    switch (fork()) {
+        case -1: // fork error
+            break;
+        case 0: // child
+            close(pipefd[0]); // close pipe read channel
+            dup2(pipefd[1], STDOUT_FILENO); 
+            execlp("ls", "ls", "/", NULL); // execute unix command 'ls /'
+            close(pipefd[1]);
+            exit(EXIT_SUCCESS);
+            break;
+        default: // parent
+            close(pipefd[1]); // close pipe write channel
+            dup2(pipefd[0], STDIN_FILENO);
+            close(pipefd[0]);
+            execlp("wc", "wc", "-l", NULL);
+            break;
     }
-
+    
     return 0;
 }
