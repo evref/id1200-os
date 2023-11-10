@@ -22,10 +22,11 @@ signed char get_value( int paddress){
     return *(mem+paddress);
 }
 
-void allocate_frame(char page){
+void allocate_frame(unsigned char page){
     fseek(bs, page<<8, SEEK_SET);
     fread(mem+nextFreeSpace, 1, 256, bs);
     ptable[page] = (nextFreeSpace>>8) | 0x100; //frame plus validbit
+    printf("(%d, %d) ", page, ptable[page]);
     nextFreeSpace+=256;
 }
 
@@ -38,7 +39,8 @@ int get_physical_address(int vaddress){
         allocate_frame(pnum);
     }
     printf("%d", pnum);
-    printf(", %d\n", ptable[pnum]);
+    printf(", %d", ptable[pnum] & 0xff);
+    printf(", %d\n", offset);
     return ((ptable[pnum] & 0xff) << 8) | offset;
 }
 
