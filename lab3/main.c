@@ -50,13 +50,13 @@ void testfunc(){
     printf("TEST START\n");
     unsigned short address;
     unsigned short paddress;
-    while(fscanf(in, "%hd", &address)){
+    while(fscanf(in, "%hd", &address) != EOF){
         printf("TEMP ");
         printf("%d", address);
         printf(" CHECK\n");
         paddress = get_physical_address(address);
         printf("PRINTING ");
-        printf("Virtual address: %d Physical address: %d Value: %hhd\n", address, paddress, get_value(paddress));
+        fprintf(out, "Virtual address: %d Physical address: %d Value: %hhd\n", address, paddress, get_value(paddress));
         printf("DONE\n");
     }
     printf("TEST CLOSING\n");
