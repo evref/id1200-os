@@ -3,23 +3,23 @@
 
 
 unsigned long nums[] = { 1, 256, 32768, 32769, 128, 65534, 33153 };
-unsigned short ptable[256];
+int ptable[256];
 signed char *mem;
 int nextFreeSpace = 0;
 FILE *bs;
 
 
 
-int get_offset(unsigned int num){
+int get_offset( int num){
     return num & 0xff;
 }
-int get_pgnum(unsigned int num){
+int get_pgnum( int num){
     return (num >> 8) & 0xff;
 }
 
 
-char get_value(unsigned short paddress){
-    return mem[paddress];
+signed char get_value( int paddress){
+    return *(mem+paddress);
 }
 
 void allocate_frame(char page){
@@ -29,10 +29,11 @@ void allocate_frame(char page){
     nextFreeSpace+=256;
 }
 
-unsigned short get_physical_address(unsigned short vaddress){
+int get_physical_address(int vaddress){
+    printf("ERROR");
     int pnum = get_pgnum(vaddress);
     int offset = get_offset(vaddress);
-    printf("ERROR CHECK: ");
+    printf(" CHECK: ");
     if(!(ptable[pnum] & 0x100)){ // if page address not in page table
         allocate_frame(pnum);
     }
@@ -45,13 +46,15 @@ void testfunc(){
     FILE *in = fopen("addresses.txt", "r");
     FILE *out = fopen("output.txt", "a");
     printf("TEST START\n");
-    int address;
-    int paddress;
-    while(fscanf(in, "%d", &address)){
-        printf("TEMP CHECK\n");
+    unsigned short address;
+    unsigned short paddress;
+    while(fscanf(in, "%hd", &address)){
+        printf("TEMP ");
+        printf("%d", address);
+        printf(" CHECK\n");
         paddress = get_physical_address(address);
         printf("PRINTING ");
-        fprintf(out, "Virtual address: %d Physical address: %d Value: %d\n", address, paddress, get_value(paddress));
+        printf("Virtual address: %d Physical address: %d Value: %hhd\n", address, paddress, get_value(paddress));
         printf("DONE\n");
     }
     printf("TEST CLOSING\n");
