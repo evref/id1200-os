@@ -1,13 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct key_value{
+    int key;
+    int value;
+};
 
 unsigned long nums[] = { 1, 256, 32768, 32769, 128, 65534, 33153 };
 int ptable[256];
 signed char *mem;
 int nextFreeSpace = 0;
 FILE *bs;
-
+struct key_value tlb[16];
+int tlb_idx = 0;
 
 
 int get_offset( int num){
@@ -34,6 +39,9 @@ int get_physical_address(int vaddress){
     printf("ERROR");
     int pnum = get_pgnum(vaddress);
     int offset = get_offset(vaddress);
+
+    
+
     printf(" CHECK: ");
     if(!(ptable[pnum] & 0x100)){ // if page address not in page table
         allocate_frame(pnum);
