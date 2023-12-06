@@ -2,3 +2,4 @@ a.out
 process_src/
 pthread_src/
 .vscode/
+term_out.txt
