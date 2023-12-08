@@ -7,7 +7,10 @@ int QUEUE_SIZE = 1000;
 int CYLINDER_LEN = 5000;
 int NUM_ALGORITHMS = 6;
 
-
+int comp_int (int a, int b)
+{
+    return (a > b) - (a < b);
+}
 
 void fcfs(int* steps_moved, int* queue, int start_head_pos) {
     int i, head_pos = start_head_pos;
@@ -18,7 +21,44 @@ void fcfs(int* steps_moved, int* queue, int start_head_pos) {
 }
 
 void sstf(int* steps_moved, int* queue, int start_head_pos) {
-    *steps_moved = 2;
+    int head_pos = start_head_pos;
+    int q[QUEUE_SIZE];
+    int i = 0;
+    int low;
+    int high;
+    int dist_low;
+    int dist_high;
+
+    memcpy(q, queue, sizeof(int));
+    qsort(q, QUEUE_SIZE, sizeof(int), comp_int);
+
+    while(q[i] <= head_pos){i++;}   //optimera med binary search
+    low = i-1, high = i;
+    while (low >= 0 && high <5000){
+        dist_low = abs(head_pos-q[low]);
+        dist_high = abs(head_pos-q[high]);
+        if(dist_low < dist_high){
+            *steps_moved += dist_low;
+            head_pos = q[low];
+            low--;
+        } else{
+            *steps_moved += dist_high;
+            head_pos = q[high];
+            high++;
+        }
+    }
+    while (low >= 0){
+        dist_low = abs(head_pos-q[low]);
+        *steps_moved += dist_low;
+        head_pos = q[low];
+        low--;
+    }
+    while (high <5000){
+        dist_high = abs(head_pos-q[high]);
+        *steps_moved += dist_high;
+        head_pos = q[high];
+        high++;
+    }
 }
 
 void scan(int* steps_moved, int* queue, int start_head_pos) {
