@@ -62,19 +62,109 @@ void sstf(int* steps_moved, int* queue, int start_head_pos) {
 }
 
 void scan(int* steps_moved, int* queue, int start_head_pos) {
-    *steps_moved = 3;
+    int head_pos = start_head_pos;
+    int q[QUEUE_SIZE];
+    int i = 0;
+    int temp;
+
+    memcpy(q, queue, sizeof(int));
+    qsort(q, QUEUE_SIZE, sizeof(int), comp_int);
+
+    while(q[i] <= head_pos){i++;}   //optimera med binary search
+    temp = i;
+    while(i>0){
+        i--;
+        *steps_moved += head_pos - q[i]; // huvudet går nedåt, detta blir positivt
+        head_pos = q[i];
+    }
+    *steps_moved += head_pos;
+    head_pos = 0;
+    i = temp;
+    while(i<5000){
+        *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
+        head_pos = q[i];
+        i++;
+    }
 }
 
 void look(int* steps_moved, int* queue, int start_head_pos) {
-    *steps_moved = 4;
+    int head_pos = start_head_pos;
+    int q[QUEUE_SIZE];
+    int i = 0;
+    int temp;
+
+    memcpy(q, queue, sizeof(int));
+    qsort(q, QUEUE_SIZE, sizeof(int), comp_int);
+
+    while(q[i] <= head_pos){i++;}   //optimera med binary search
+    temp = i;
+    while(i>0){
+        i--;
+        *steps_moved += head_pos - q[i]; // huvudet går nedåt, detta blir positivt
+        head_pos = q[i];
+    }
+    i = temp;
+    while(i<5000){
+        *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
+        head_pos = q[i];
+        i++;
+    }
 }
 
 void cscan(int* steps_moved, int* queue, int start_head_pos) {
-    *steps_moved = 5;
+    int head_pos = start_head_pos;
+    int q[QUEUE_SIZE];
+    int i = 0;
+    int temp;
+
+    memcpy(q, queue, sizeof(int));
+    qsort(q, QUEUE_SIZE, sizeof(int), comp_int);
+
+    while(q[i] <= head_pos){i++;}   //optimera med binary search
+    temp = i;
+    while(i<5000){
+        *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
+        head_pos = q[i];
+        i++;
+    }
+    if(temp == 0) return;
+    i = 0;
+
+    *steps_moved += 4999 - head_pos;
+    head_pos = 4999;
+    *steps_moved += 5000;
+    head_pos = 0;
+    while(i<temp){
+        *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
+        head_pos = q[i];
+        i++;
+    }
 }
 
 void clook(int* steps_moved, int* queue, int start_head_pos) {
-    *steps_moved = 6;
+    int head_pos = start_head_pos;
+    int q[QUEUE_SIZE];
+    int i = 0;
+    int temp;
+
+    memcpy(q, queue, sizeof(int));
+    qsort(q, QUEUE_SIZE, sizeof(int), comp_int);
+
+    while(q[i] <= head_pos){i++;}   //optimera med binary search
+    temp = i;
+    while(i<5000){
+        *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
+        head_pos = q[i];
+        i++;
+    }
+
+    *steps_moved += head_pos;
+    head_pos = 0;
+    while(i<temp){
+        *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
+        head_pos = q[i];
+        i++;
+    }
 }
 
 void run_algorithms(int* queue) {
