@@ -1,15 +1,16 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 int QUEUE_SIZE = 1000;
 int CYLINDER_LEN = 5000;
 int NUM_ALGORITHMS = 6;
 
-int comp_int (int a, int b)
+int comp_int (const void* a, const void* b)
 {
-    return (a > b) - (a < b);
+    return (*(int*)a > *(int*)b) - (*(int*)a < *(int*)b);
 }
 
 void fcfs(int* steps_moved, int* queue, int start_head_pos) {
@@ -34,7 +35,7 @@ void sstf(int* steps_moved, int* queue, int start_head_pos) {
 
     while(q[i] <= head_pos){i++;}   //optimera med binary search
     low = i-1, high = i;
-    while (low >= 0 && high <5000){
+    while (low >= 0 && high < QUEUE_SIZE){
         dist_low = abs(head_pos-q[low]);
         dist_high = abs(head_pos-q[high]);
         if(dist_low < dist_high){
@@ -53,7 +54,7 @@ void sstf(int* steps_moved, int* queue, int start_head_pos) {
         head_pos = q[low];
         low--;
     }
-    while (high <5000){
+    while (high < QUEUE_SIZE){
         dist_high = abs(head_pos-q[high]);
         *steps_moved += dist_high;
         head_pos = q[high];
@@ -80,7 +81,7 @@ void scan(int* steps_moved, int* queue, int start_head_pos) {
     *steps_moved += head_pos;
     head_pos = 0;
     i = temp;
-    while(i<5000){
+    while(i<QUEUE_SIZE){
         *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
         head_pos = q[i];
         i++;
@@ -104,7 +105,7 @@ void look(int* steps_moved, int* queue, int start_head_pos) {
         head_pos = q[i];
     }
     i = temp;
-    while(i<5000){
+    while(i<QUEUE_SIZE){
         *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
         head_pos = q[i];
         i++;
@@ -122,7 +123,7 @@ void cscan(int* steps_moved, int* queue, int start_head_pos) {
 
     while(q[i] <= head_pos){i++;}   //optimera med binary search
     temp = i;
-    while(i<5000){
+    while(i<QUEUE_SIZE){
         *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
         head_pos = q[i];
         i++;
@@ -152,7 +153,7 @@ void clook(int* steps_moved, int* queue, int start_head_pos) {
 
     while(q[i] <= head_pos){i++;}   //optimera med binary search
     temp = i;
-    while(i<5000){
+    while(i<QUEUE_SIZE){
         *steps_moved += q[i] - head_pos; //positiv summa då huvudet går uppåt
         head_pos = q[i];
         i++;
